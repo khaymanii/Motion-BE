@@ -1,0 +1,20 @@
+{
+  "name": "motion-be",
+  "version": "1.0.0",
+  "description": "Motion - Powering  everyday movement",
+  "homepage": "https://github.com/khaymanii/Motion-BE#readme",
+  "bugs": {
+    "url": "https://github.com/khaymanii/Motion-BE/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khaymanii/Motion-BE.git"
+  },
+  "license": "ISC",
+  "author": "Ken",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
