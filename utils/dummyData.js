@@ -1,61 +1,133 @@
-const DUMMY_DATA = {
-  ride: {
-    providers: ["Uber", "Bolt", "inDrive"],
-    locations: ["Ikoyi", "Lekki", "Victoria Island", "Yaba", "Surulere"],
+// dummyServices.js
+const DUMMY_SERVICES = [
+  // ---- Ride Services ----
+  {
+    city: "Lagos",
+    service_type: "ride",
+    serviceId: "uber",
+    name: "Uber",
     vehicleTypes: ["Sedan", "SUV", "Motorbike", "Van"],
   },
-
-  food: {
-    restaurants: [
-      "Domino's",
-      "KFC",
-      "Tastee Fried Chicken",
-      "Mr Biggs",
-      "Pizza Hut",
-    ],
-    menu: {
-      "Domino's": ["Pizza", "Pasta", "Wings"],
-      KFC: ["Bucket", "Zinger Burger", "Fries"],
-      "Tastee Fried Chicken": ["Chicken Sandwich", "Spicy Wings", "Coleslaw"],
-      "Mr Biggs": ["Burger", "Rice & Chicken", "Yam Chips"],
-      "Pizza Hut": ["Margherita Pizza", "Pepperoni Pizza", "Garlic Bread"],
-    },
+  {
+    city: "Lagos",
+    service_type: "ride",
+    serviceId: "bolt",
+    name: "Bolt",
+    vehicleTypes: ["Sedan", "SUV", "Motorbike"],
+  },
+  {
+    city: "Lagos",
+    service_type: "ride",
+    serviceId: "indrive",
+    name: "inDrive",
+    vehicleTypes: ["Sedan", "Motorbike"],
   },
 
-  parcel: {
-    couriers: ["DHL", "FedEx", "GIG Logistics", "Jumia Express", "UPS"],
+  // ---- Food Services ----
+  {
+    city: "Lagos",
+    service_type: "food",
+    serviceId: "dominos",
+    name: "Domino's",
+    menu: ["Pizza", "Pasta", "Wings"],
+  },
+  {
+    city: "Lagos",
+    service_type: "food",
+    serviceId: "kfc",
+    name: "KFC",
+    menu: ["Bucket", "Zinger Burger", "Fries"],
+  },
+  {
+    city: "Lagos",
+    service_type: "food",
+    serviceId: "tastee",
+    name: "Tastee Fried Chicken",
+    menu: ["Chicken Sandwich", "Spicy Wings", "Coleslaw"],
+  },
+  {
+    city: "Lagos",
+    service_type: "food",
+    serviceId: "mrbiggs",
+    name: "Mr Biggs",
+    menu: ["Burger", "Rice & Chicken", "Yam Chips"],
+  },
+  {
+    city: "Lagos",
+    service_type: "food",
+    serviceId: "pizzahut",
+    name: "Pizza Hut",
+    menu: ["Margherita Pizza", "Pepperoni Pizza", "Garlic Bread"],
+  },
+
+  // ---- Parcel Services ----
+  {
+    city: "Lagos",
+    service_type: "parcel",
+    serviceId: "dhl",
+    name: "DHL",
     parcelSizes: ["Small", "Medium", "Large", "Extra Large"],
     deliverySpeeds: ["Standard", "Express", "Same Day"],
   },
-
-  grocery: {
-    categories: [
-      "Fruits & Vegetables",
-      "Staples",
-      "Snacks",
-      "Beverages",
-      "Household Items",
-    ],
-    items: {
-      "Fruits & Vegetables": [
-        "Apples",
-        "Tomatoes",
-        "Bananas",
-        "Carrots",
-        "Onions",
-      ],
-      Staples: ["Rice", "Beans", "Yam", "Spaghetti", "Cooking Oil"],
-      Snacks: ["Chips", "Biscuits", "Chocolate", "Nuts", "Popcorn"],
-      Beverages: ["Coke", "Pepsi", "Fanta", "Water", "Juice"],
-      "Household Items": [
-        "Soap",
-        "Toilet Paper",
-        "Detergent",
-        "Toothpaste",
-        "Cleaning Spray",
-      ],
-    },
+  {
+    city: "Lagos",
+    service_type: "parcel",
+    serviceId: "fedex",
+    name: "FedEx",
+    parcelSizes: ["Small", "Medium", "Large"],
+    deliverySpeeds: ["Standard", "Express"],
   },
-};
+  {
+    city: "Lagos",
+    service_type: "parcel",
+    serviceId: "gig",
+    name: "GIG Logistics",
+    parcelSizes: ["Small", "Medium", "Large"],
+    deliverySpeeds: ["Standard", "Express", "Same Day"],
+  },
 
-module.exports = DUMMY_DATA;
+  // ---- Grocery Services ----
+  {
+    city: "Lagos",
+    service_type: "grocery",
+    serviceId: "fruits-vegetables",
+    name: "Fruits & Vegetables",
+    items: ["Apples", "Tomatoes", "Bananas", "Carrots", "Onions"],
+  },
+  {
+    city: "Lagos",
+    service_type: "grocery",
+    serviceId: "staples",
+    name: "Staples",
+    items: ["Rice", "Beans", "Yam", "Spaghetti", "Cooking Oil"],
+  },
+  {
+    city: "Lagos",
+    service_type: "grocery",
+    serviceId: "snacks",
+    name: "Snacks",
+    items: ["Chips", "Biscuits", "Chocolate", "Nuts", "Popcorn"],
+  },
+  {
+    city: "Lagos",
+    service_type: "grocery",
+    serviceId: "beverages",
+    name: "Beverages",
+    items: ["Coke", "Pepsi", "Fanta", "Water", "Juice"],
+  },
+  {
+    city: "Lagos",
+    service_type: "grocery",
+    serviceId: "household",
+    name: "Household Items",
+    items: [
+      "Soap",
+      "Toilet Paper",
+      "Detergent",
+      "Toothpaste",
+      "Cleaning Spray",
+    ],
+  },
+];
+
+module.exports = DUMMY_SERVICES;
