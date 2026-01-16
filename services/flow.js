@@ -1,7 +1,4 @@
 module.exports = {
-  // --------------------
-  // ENTRY
-  // --------------------
   WELCOME: {
     id: "WELCOME",
     text: "Welcome to Motion 🚀\nWhat do you need today?",
