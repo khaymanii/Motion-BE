@@ -30,7 +30,7 @@ async function getUserSession(userId) {
     if (!res.Item) return null;
 
     return {
-      currentScreen: res.Item.currentScreen?.S || "WELCOME",
+      currentFlow: res.Item.currentFlow?.S || "WELCOME",
       answers: res.Item.answers?.S ? JSON.parse(res.Item.answers.S) : {},
       listings: res.Item.listings?.S
         ? JSON.parse(res.Item.listings.S)
@@ -58,7 +58,7 @@ async function saveUserSession(userId, session) {
 
     const item = {
       userId: { S: userId },
-      currentScreen: { S: session.currentScreen || "WELCOME" },
+      currentFlow: { S: session.currentFlow || "WELCOME" },
       answers: { S: JSON.stringify(cleanAnswers) },
       timestamp: { S: new Date().toISOString() },
       ttl: {

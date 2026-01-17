@@ -1,81 +1,103 @@
-// parseUserMessage.js
 const FLOW = require("./flow");
 
 /**
  * Parse the user message and update the session
- * @param {string} userMessage - The raw text message from user
- * @param {object} session - The user's session object
- * @returns {object} - { replyText, nextFlowId, session }
  */
 function parseUserMessage(userMessage, session) {
-  if (!session.currentFlow) {
-    session.currentFlow = "WELCOME";
-    session.answers = {};
+  // Initialize session safely
+  const newSession = {
+    currentFlow: session?.currentFlow || "WELCOME",
+    answers: session?.answers || {},
+  };
+
+  const currentFlow = FLOW[newSession.currentFlow];
+
+  if (!currentFlow) {
+    return resetToWelcome(newSession);
   }
 
-  const currentFlow = FLOW[session.currentFlow];
-  let replyText = "";
-  let nextFlowId = null;
+  const rawText = userMessage.trim();
+  const normalized = rawText.toLowerCase();
 
-  // Normalize user message
-  const msg = userMessage.trim().toLowerCase();
+  // ---- Global commands ----
+  if (normalized === "menu") {
+    return resetToWelcome(newSession);
+  }
 
-  // Handle special commands
-  if (msg === "menu") {
-    session.currentFlow = "WELCOME";
-    session.answers = {};
+  // ---- Numbered menu handling ----
+  if (currentFlow.numbered) {
+    if (!/^\d+$/.test(normalized)) {
+      return reprompt(currentFlow, newSession);
+    }
+
+    const option = Number(normalized);
+    const nextFlowId = currentFlow.next?.[option];
+
+    if (!nextFlowId || !FLOW[nextFlowId]) {
+      return reprompt(currentFlow, newSession);
+    }
+
+    if (currentFlow.storeKey) {
+      newSession.answers[currentFlow.storeKey] =
+        currentFlow.valueMap?.[option] ?? option;
+    }
+
+    newSession.currentFlow = nextFlowId;
+
     return {
-      replyText: FLOW.WELCOME.text,
-      nextFlowId: "WELCOME",
-      session,
+      replyText: resolveText(FLOW[nextFlowId], newSession),
+      nextFlowId,
+      session: newSession,
     };
   }
 
-  // Numbered option handling
-  if (currentFlow.numbered && /^\d+$/.test(msg)) {
-    const optionKey = Number(msg);
+  // ---- Free text input ----
+  if (currentFlow.inputType === "text" && currentFlow.storeKey) {
+    newSession.answers[currentFlow.storeKey] = rawText;
 
-    if (currentFlow.valueMap) {
-      // Map the number to a value for storing
-      session.answers[currentFlow.storeKey] = currentFlow.valueMap[optionKey];
-    } else if (currentFlow.storeKey) {
-      session.answers[currentFlow.storeKey] = optionKey;
+    const nextFlowId = currentFlow.next;
+    if (!FLOW[nextFlowId]) {
+      return resetToWelcome(newSession);
     }
 
-    nextFlowId = currentFlow.next[optionKey];
-    replyText =
-      typeof FLOW[nextFlowId].text === "function"
-        ? FLOW[nextFlowId].text(session.answers)
-        : FLOW[nextFlowId].text;
+    newSession.currentFlow = nextFlowId;
 
-    session.currentFlow = nextFlowId;
-    return { replyText, nextFlowId, session };
+    return {
+      replyText: resolveText(FLOW[nextFlowId], newSession),
+      nextFlowId,
+      session: newSession,
+    };
   }
 
-  // Free text input handling
-  if (currentFlow.inputType === "text" && currentFlow.storeKey) {
-    session.answers[currentFlow.storeKey] = msg;
+  // ---- Final fallback ----
+  return reprompt(currentFlow, newSession);
+}
 
-    // Move to next flow
-    nextFlowId = currentFlow.next;
-    replyText =
-      typeof FLOW[nextFlowId].text === "function"
-        ? FLOW[nextFlowId].text(session.answers)
-        : FLOW[nextFlowId].text;
+/* ---------------- helpers ---------------- */
 
-    session.currentFlow = nextFlowId;
-    return { replyText, nextFlowId, session };
-  }
+function resolveText(flow, session) {
+  return typeof flow.text === "function"
+    ? flow.text(session.answers)
+    : flow.text;
+}
 
-  // Fallback if message can't be parsed
-  replyText =
-    "Sorry, I didn't understand that. Please select an option from the menu:\n\n" +
-    FLOW.WELCOME.text;
-  session.currentFlow = "WELCOME";
-  session.answers = {};
-  nextFlowId = "WELCOME";
+function reprompt(flow, session) {
+  return {
+    replyText: "❌ Invalid response.\n\n" + resolveText(flow, session),
+    nextFlowId: session.currentFlow,
+    session,
+  };
+}
 
-  return { replyText, nextFlowId, session };
+function resetToWelcome(session) {
+  return {
+    replyText: FLOW.WELCOME.text,
+    nextFlowId: "WELCOME",
+    session: {
+      currentFlow: "WELCOME",
+      answers: {},
+    },
+  };
 }
 
 module.exports = parseUserMessage;
