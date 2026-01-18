@@ -12,7 +12,6 @@ const MENU_KEYWORDS = ["menu", "start", "restart", "home"];
 
 async function webhookHandler(event, config) {
   try {
-    // ---- Webhook verification ----
     if (event.httpMethod === "GET") {
       const q = event.queryStringParameters || {};
       if (
@@ -53,7 +52,7 @@ async function webhookHandler(event, config) {
       await sendWhatsAppMessage(
         from,
         "🔹 Menu reset.\n\n" + session.currentFlow,
-        config
+        config,
       );
       return { statusCode: 200, body: "ok" };
     }
@@ -61,7 +60,7 @@ async function webhookHandler(event, config) {
     // ---- Parse user message ----
     const { replyText, session: updatedSession } = parseUserMessage(
       text,
-      session
+      session,
     );
 
     // ---- Save updated session ----
