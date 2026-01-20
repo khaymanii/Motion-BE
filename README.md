@@ -1,4 +1,4 @@
-## Motion - Powering Everyday Movement
+## Motion - Simplifying Everyday Movement
 
 Motion is a WhatsApp Assistant that lets users book rides, order food, send parcels, and buy groceries—all through one simple chat.
 
