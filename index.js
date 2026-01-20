@@ -1,5 +1,5 @@
 const { webhookHandler } = require("./webhook/webhookHandler");
-const { getConfig } = require("./utils/getConfig");
+const { getConfig } = require("./utils/config");
 
 exports.handler = async (event) => {
   const config = getConfig();

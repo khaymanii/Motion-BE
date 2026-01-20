@@ -1,4 +1,4 @@
-const FLOW = require("./flow");
+const FLOW = require("../services/flow");
 
 /**
  * Parse the user message and update the session
