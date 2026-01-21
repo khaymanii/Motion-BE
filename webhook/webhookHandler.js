@@ -6,76 +6,82 @@ const {
   isMessageProcessed,
   markMessageProcessed,
 } = require("../services/dynamoService");
+const FLOW = require("../services/flow");
 
-// Global menu commands
 const MENU_KEYWORDS = ["menu", "start", "restart", "home"];
 
 async function webhookHandler(event, config) {
   try {
+    /* ---------------- VERIFY WEBHOOK ---------------- */
     if (event.httpMethod === "GET") {
       const q = event.queryStringParameters || {};
+
       if (
         q["hub.mode"] === "subscribe" &&
         q["hub.verify_token"] === config.verifyToken
       ) {
         return { statusCode: 200, body: q["hub.challenge"] };
       }
+
       return { statusCode: 403, body: "Verification failed" };
     }
 
-    // ---- Process incoming POST ----
-    const payload = JSON.parse(event.body || "{}");
-    const message = extractIncomingMessage(payload);
+    /* ---------------- HANDLE POST ---------------- */
+    if (!event.body) {
+      return { statusCode: 200, body: "No body" };
+    }
 
-    if (!message || !message.text) return { statusCode: 200, body: "ok" };
+    const payload = JSON.parse(event.body);
+
+    const message = extractIncomingMessage(payload);
+    if (!message || !message.text) {
+      // Ignore non-text messages silently
+      return { statusCode: 200, body: "Ignored non-text" };
+    }
 
     const { from, text } = message;
 
-    // ---- Deduplicate messages ----
-    const messageId = payload.entry?.[0]?.id;
-    if (messageId && (await isMessageProcessed(messageId))) {
-      console.log(`[DUPLICATE] Ignored message from ${from}: ${text}`);
-      return { statusCode: 200, body: "Duplicate message ignored" };
-    }
-    if (messageId) await markMessageProcessed(messageId);
+    /* ---------------- FIXED MESSAGE ID ---------------- */
+    const messageId =
+      payload.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.id;
 
-    // ---- Load or initialize session ----
+    if (messageId) {
+      const alreadyProcessed = await isMessageProcessed(messageId);
+      if (alreadyProcessed) {
+        console.log("🔁 Duplicate message ignored:", messageId);
+        return { statusCode: 200, body: "Duplicate ignored" };
+      }
+      await markMessageProcessed(messageId);
+    }
+
+    /* ---------------- LOAD SESSION ---------------- */
     let session = (await getUserSession(from)) || {
       currentFlow: "WELCOME",
       answers: {},
     };
 
-    // ---- Global menu handling ----
+    /* ---------------- GLOBAL MENU ---------------- */
     if (MENU_KEYWORDS.includes(text.trim().toLowerCase())) {
-      session = { currentFlow: "WELCOME", answers: {} };
-      await saveUserSession(from, session);
-      await sendWhatsAppMessage(
-        from,
-        "🔹 Menu reset.\n\n" + session.currentFlow,
-        config,
-      );
-      return { statusCode: 200, body: "ok" };
+      const newSession = { currentFlow: "WELCOME", answers: {} };
+      await saveUserSession(from, newSession);
+
+      await sendWhatsAppMessage(from, FLOW.WELCOME.text, config);
+
+      return { statusCode: 200, body: "Menu reset" };
     }
 
-    // ---- Parse user message ----
+    /* ---------------- FLOW HANDLING ---------------- */
     const { replyText, session: updatedSession } = parseUserMessage(
       text,
       session,
     );
 
-    // ---- Save updated session ----
     await saveUserSession(from, updatedSession);
-
-    // ---- Send reply ----
     await sendWhatsAppMessage(from, replyText, config);
 
     return { statusCode: 200, body: "ok" };
   } catch (err) {
-    console.error("❌ Webhook handler error:", {
-      error: err.message,
-      stack: err.stack,
-      eventBody: event.body,
-    });
+    console.error("❌ Webhook Error:", err);
     return {
       statusCode: 500,
       body: "Internal Server Error",

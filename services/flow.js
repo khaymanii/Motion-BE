@@ -1,14 +1,14 @@
 module.exports = {
   WELCOME: {
     id: "WELCOME",
-    text: "Welcome to Motion 🚀\nWhat do you need today?",
-    options: [
-      "1. 🚗 Ride booking",
-      "2. 🍔 Food ordering",
-      "3. 📦 Parcel delivery",
+    text:
+      "Welcome to Motion 🚀\nWhat do you need today?\n\n" +
+      "1. 🚗 Ride booking\n" +
+      "2. 🍔 Food ordering\n" +
+      "3. 📦 Parcel delivery\n" +
       "4. 🛒 Grocery ordering",
-    ],
     numbered: true,
+    allowFreeText: true,
     next: {
       1: "RIDE_START",
       2: "FOOD_START",
@@ -17,9 +17,8 @@ module.exports = {
     },
   },
 
-  // --------------------
-  // RIDE FLOW
-  // --------------------
+  /* -------------------- RIDE -------------------- */
+
   RIDE_START: {
     id: "RIDE_START",
     text: "🚗 Ride booking\nWhere are you going from?",
@@ -38,8 +37,8 @@ module.exports = {
 
   RIDE_VEHICLE: {
     id: "RIDE_VEHICLE",
-    text: "Select a vehicle type:",
-    options: ["1. Sedan", "2. SUV", "3. Motorbike", "4. Van"],
+    text:
+      "Select a vehicle type:\n\n" + "1. Sedan\n2. SUV\n3. Motorbike\n4. Van",
     numbered: true,
     storeKey: "vehicle_type",
     valueMap: {
@@ -58,29 +57,26 @@ module.exports = {
 
   RIDE_CONFIRM: {
     id: "RIDE_CONFIRM",
-    text: (answers) =>
+    text: (a) =>
       `🚗 Ride Summary\n` +
-      `From: ${answers.pickup_location}\n` +
-      `To: ${answers.dropoff_location}\n` +
-      `Vehicle: ${answers.vehicle_type}\n\n` +
-      `Confirm booking?\n\n1. Confirm\n2. Cancel`,
+      `From: ${a.pickup_location}\n` +
+      `To: ${a.dropoff_location}\n` +
+      `Vehicle: ${a.vehicle_type}\n\n` +
+      `1. Confirm\n2. Cancel`,
     numbered: true,
-    next: {
-      1: "RIDE_CONFIRMED",
-      2: "WELCOME",
-    },
+    next: { 1: "RIDE_CONFIRMED", 2: "WELCOME" },
   },
 
   RIDE_CONFIRMED: {
     id: "RIDE_CONFIRMED",
     text:
-      "✅ Ride request received!\nA driver will contact you shortly.\n\n" +
+      "✅ Ride request received!\n" +
+      "A driver will contact you shortly.\n\n" +
       "Type *menu* to start again.",
   },
 
-  // --------------------
-  // FOOD FLOW
-  // --------------------
+  /* -------------------- FOOD -------------------- */
+
   FOOD_START: {
     id: "FOOD_START",
     text: "🍔 Food ordering\nWhat restaurant would you like?",
@@ -99,28 +95,25 @@ module.exports = {
 
   FOOD_CONFIRM: {
     id: "FOOD_CONFIRM",
-    text: (answers) =>
+    text: (a) =>
       `🍔 Order Summary\n` +
-      `Restaurant: ${answers.restaurant}\n` +
-      `Item: ${answers.food_item}\n\n` +
-      `Confirm order?\n\n1. Confirm\n2. Cancel`,
+      `Restaurant: ${a.restaurant}\n` +
+      `Item: ${a.food_item}\n\n` +
+      `1. Confirm\n2. Cancel`,
     numbered: true,
-    next: {
-      1: "FOOD_CONFIRMED",
-      2: "WELCOME",
-    },
+    next: { 1: "FOOD_CONFIRMED", 2: "WELCOME" },
   },
 
   FOOD_CONFIRMED: {
     id: "FOOD_CONFIRMED",
     text:
-      "✅ Order placed successfully!\nYour food is being prepared.\n\n" +
+      "✅ Order placed successfully!\n" +
+      "Your food is being prepared.\n\n" +
       "Type *menu* to start again.",
   },
 
-  // --------------------
-  // PARCEL FLOW
-  // --------------------
+  /* -------------------- PARCEL -------------------- */
+
   PARCEL_START: {
     id: "PARCEL_START",
     text: "📦 Parcel delivery\nWhat is the pickup location?",
@@ -139,28 +132,25 @@ module.exports = {
 
   PARCEL_CONFIRM: {
     id: "PARCEL_CONFIRM",
-    text: (answers) =>
+    text: (a) =>
       `📦 Parcel Summary\n` +
-      `From: ${answers.parcel_pickup}\n` +
-      `To: ${answers.parcel_dropoff}\n\n` +
-      `Confirm delivery?\n\n1. Confirm\n2. Cancel`,
+      `From: ${a.parcel_pickup}\n` +
+      `To: ${a.parcel_dropoff}\n\n` +
+      `1. Confirm\n2. Cancel`,
     numbered: true,
-    next: {
-      1: "PARCEL_CONFIRMED",
-      2: "WELCOME",
-    },
+    next: { 1: "PARCEL_CONFIRMED", 2: "WELCOME" },
   },
 
   PARCEL_CONFIRMED: {
     id: "PARCEL_CONFIRMED",
     text:
-      "✅ Parcel delivery scheduled!\nA courier will contact you.\n\n" +
+      "✅ Parcel delivery scheduled!\n" +
+      "A courier will contact you.\n\n" +
       "Type *menu* to start again.",
   },
 
-  // --------------------
-  // GROCERY FLOW
-  // --------------------
+  /* -------------------- GROCERY -------------------- */
+
   GROCERY_START: {
     id: "GROCERY_START",
     text: "🛒 Grocery ordering\nWhat items do you need?",
@@ -171,21 +161,19 @@ module.exports = {
 
   GROCERY_CONFIRM: {
     id: "GROCERY_CONFIRM",
-    text: (answers) =>
+    text: (a) =>
       `🛒 Grocery Summary\n` +
-      `Items: ${answers.grocery_items}\n\n` +
-      `Confirm order?\n\n1. Confirm\n2. Cancel`,
+      `Items: ${a.grocery_items}\n\n` +
+      `1. Confirm\n2. Cancel`,
     numbered: true,
-    next: {
-      1: "GROCERY_CONFIRMED",
-      2: "WELCOME",
-    },
+    next: { 1: "GROCERY_CONFIRMED", 2: "WELCOME" },
   },
 
   GROCERY_CONFIRMED: {
     id: "GROCERY_CONFIRMED",
     text:
-      "✅ Grocery order placed!\nYour items will be delivered soon.\n\n" +
+      "✅ Grocery order placed!\n" +
+      "Your items will be delivered soon.\n\n" +
       "Type *menu* to start again.",
   },
 };

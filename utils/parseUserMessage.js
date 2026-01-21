@@ -1,103 +1,69 @@
 const FLOW = require("../services/flow");
 
-/**
- * Parse the user message and update the session
- */
-function parseUserMessage(userMessage, session) {
-  // Initialize session safely
+function parseUserMessage(userMessage, session = {}) {
   const newSession = {
-    currentFlow: session?.currentFlow || "WELCOME",
-    answers: session?.answers || {},
+    currentFlow: session.currentFlow || "WELCOME",
+    answers: session.answers || {},
   };
 
-  const currentFlow = FLOW[newSession.currentFlow];
+  const flow = FLOW[newSession.currentFlow];
+  if (!flow) return reset();
 
-  if (!currentFlow) {
-    return resetToWelcome(newSession);
+  const text = userMessage.trim();
+  const normalized = text.toLowerCase();
+
+  // ---- Global menu ----
+  if (normalized === "menu" || normalized === "start") {
+    return reset();
   }
 
-  const rawText = userMessage.trim();
-  const normalized = rawText.toLowerCase();
-
-  // ---- Global commands ----
-  if (normalized === "menu") {
-    return resetToWelcome(newSession);
-  }
-
-  // ---- Numbered menu handling ----
-  if (currentFlow.numbered) {
+  // ---- Numbered flow ----
+  if (flow.numbered) {
     if (!/^\d+$/.test(normalized)) {
-      return reprompt(currentFlow, newSession);
+      if (flow.allowFreeText) {
+        return { replyText: resolve(flow, newSession), session: newSession };
+      }
+      return invalid(flow, newSession);
     }
 
-    const option = Number(normalized);
-    const nextFlowId = currentFlow.next?.[option];
+    const choice = Number(normalized);
+    const next = flow.next?.[choice];
+    if (!next || !FLOW[next]) return invalid(flow, newSession);
 
-    if (!nextFlowId || !FLOW[nextFlowId]) {
-      return reprompt(currentFlow, newSession);
+    if (flow.storeKey) {
+      newSession.answers[flow.storeKey] = flow.valueMap?.[choice] ?? choice;
     }
 
-    if (currentFlow.storeKey) {
-      newSession.answers[currentFlow.storeKey] =
-        currentFlow.valueMap?.[option] ?? option;
-    }
+    newSession.currentFlow = next;
+    return { replyText: resolve(FLOW[next], newSession), session: newSession };
+  }
 
-    newSession.currentFlow = nextFlowId;
-
+  // ---- Text input ----
+  if (flow.inputType === "text" && flow.storeKey) {
+    newSession.answers[flow.storeKey] = text;
+    newSession.currentFlow = flow.next;
     return {
-      replyText: resolveText(FLOW[nextFlowId], newSession),
-      nextFlowId,
+      replyText: resolve(FLOW[flow.next], newSession),
       session: newSession,
     };
   }
 
-  // ---- Free text input ----
-  if (currentFlow.inputType === "text" && currentFlow.storeKey) {
-    newSession.answers[currentFlow.storeKey] = rawText;
-
-    const nextFlowId = currentFlow.next;
-    if (!FLOW[nextFlowId]) {
-      return resetToWelcome(newSession);
-    }
-
-    newSession.currentFlow = nextFlowId;
-
-    return {
-      replyText: resolveText(FLOW[nextFlowId], newSession),
-      nextFlowId,
-      session: newSession,
-    };
-  }
-
-  // ---- Final fallback ----
-  return reprompt(currentFlow, newSession);
+  return invalid(flow, newSession);
 }
 
-/* ---------------- helpers ---------------- */
+/* helpers */
 
-function resolveText(flow, session) {
-  return typeof flow.text === "function"
-    ? flow.text(session.answers)
-    : flow.text;
-}
+const resolve = (flow, session) =>
+  typeof flow.text === "function" ? flow.text(session.answers) : flow.text;
 
-function reprompt(flow, session) {
-  return {
-    replyText: "❌ Invalid response.\n\n" + resolveText(flow, session),
-    nextFlowId: session.currentFlow,
-    session,
-  };
-}
+const invalid = (flow, session) => ({
+  replyText: "❌ Invalid response.\n\n" + resolve(flow, session),
+  session,
+});
 
-function resetToWelcome(session) {
-  return {
-    replyText: FLOW.WELCOME.text,
-    nextFlowId: "WELCOME",
-    session: {
-      currentFlow: "WELCOME",
-      answers: {},
-    },
-  };
-}
+const reset = () => ({
+  replyText: FLOW.WELCOME.text,
+  session: { currentFlow: "WELCOME", answers: {} },
+});
 
 module.exports = parseUserMessage;
