@@ -20,7 +20,7 @@ async function isMessageProcessed(messageId) {
       new GetItemCommand({
         TableName: process.env.PROCESSED_MESSAGES_TABLE || "ProcessedMessages",
         Key: { messageId: { S: messageId } },
-      })
+      }),
     );
     return !!res.Item;
   } catch (err) {
@@ -39,7 +39,7 @@ async function markMessageProcessed(messageId) {
           timestamp: { S: new Date().toISOString() },
           ttl: { N: String(Math.floor(Date.now() / 1000) + 86400) }, // 24h expiry
         },
-      })
+      }),
     );
   } catch (err) {
     console.error("Error marking message processed:", err);
@@ -60,7 +60,7 @@ async function saveSearch(userId, params) {
           timestamp: { S: new Date().toISOString() },
           query: { S: JSON.stringify(params) },
         },
-      })
+      }),
     );
   } catch (err) {
     console.error("Error saving search:", err);
@@ -78,7 +78,7 @@ async function getLastSearch(userId) {
         },
         ScanIndexForward: false,
         Limit: 1,
-      })
+      }),
     );
 
     if (!res.Items || res.Items.length === 0) return null;
@@ -112,7 +112,7 @@ async function getServicesFromDB(searchParams) {
         KeyConditionExpression: "#city = :city",
         ExpressionAttributeNames: { "#city": "city" },
         ExpressionAttributeValues: { ":city": { S: city } },
-      })
+      }),
     );
 
     let services = (res.Items || []).map((item) => ({
@@ -162,7 +162,7 @@ async function saveBooking(bookingData) {
           timestamp: { S: new Date().toISOString() },
           status: { S: "pending" },
         },
-      })
+      }),
     );
     return { success: true };
   } catch (err) {
