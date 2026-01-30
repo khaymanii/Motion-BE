@@ -81,7 +81,7 @@ async function saveUserSession(userId, session) {
       }),
     );
   } catch (error) {
-    console.error("Error saving user session:", error);
+    console.error("Error saving the user session:", error);
     throw error;
   }
 }
