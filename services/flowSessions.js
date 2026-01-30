@@ -14,7 +14,7 @@ const SESSION_TABLE = process.env.SESSION_TABLE || "UserFlowSessions";
 // helper: remove undefined/null values
 function cleanObject(obj = {}) {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, v]) => v !== undefined && v !== null)
+    Object.entries(obj).filter(([_, v]) => v !== undefined && v !== null),
   );
 }
 
@@ -24,7 +24,7 @@ async function getUserSession(userId) {
       new GetItemCommand({
         TableName: SESSION_TABLE,
         Key: { userId: { S: userId } },
-      })
+      }),
     );
 
     if (!res.Item) return null;
@@ -49,7 +49,7 @@ async function saveUserSession(userId, session) {
         new DeleteItemCommand({
           TableName: SESSION_TABLE,
           Key: { userId: { S: userId } },
-        })
+        }),
       );
       return;
     }
@@ -78,7 +78,7 @@ async function saveUserSession(userId, session) {
       new PutItemCommand({
         TableName: SESSION_TABLE,
         Item: item,
-      })
+      }),
     );
   } catch (error) {
     console.error("Error saving user session:", error);
