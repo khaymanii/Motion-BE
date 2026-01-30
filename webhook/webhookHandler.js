@@ -35,7 +35,6 @@ async function webhookHandler(event, config) {
 
     const message = extractIncomingMessage(payload);
     if (!message || !message.text) {
-      // Ignore non-text messages silently
       return { statusCode: 200, body: "Ignored non-text" };
     }
 
