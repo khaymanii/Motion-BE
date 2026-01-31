@@ -10,6 +10,7 @@ module.exports = {
       "3. 📦 Parcel delivery\n" +
       "4. 🛒 Grocery shopping",
     numbered: true,
+    allowFreeText: true,
     next: {
       1: "RIDE_PLATFORM",
       2: "FOOD_PLATFORM",
@@ -34,7 +35,11 @@ module.exports = {
       2: "Bolt",
       3: "inDrive",
     },
-    next: "RIDE_PICKUP",
+    next: {
+      1: "RIDE_PICKUP",
+      2: "RIDE_PICKUP",
+      3: "RIDE_PICKUP",
+    },
   },
 
   RIDE_PICKUP: {
@@ -84,7 +89,10 @@ module.exports = {
       1: "Glovo",
       2: "Chowdeck",
     },
-    next: "FOOD_RESTAURANT",
+    next: {
+      1: "FOOD_RESTAURANT",
+      2: "FOOD_RESTAURANT",
+    },
   },
 
   FOOD_RESTAURANT: {
@@ -101,7 +109,11 @@ module.exports = {
       2: "The Place",
       3: "Genesis",
     },
-    next: "FOOD_ITEM",
+    next: {
+      1: "FOOD_ITEM",
+      2: "FOOD_ITEM",
+      3: "FOOD_ITEM",
+    },
   },
 
   FOOD_ITEM: {
@@ -145,7 +157,11 @@ module.exports = {
       2: "FedEx",
       3: "UPS",
     },
-    next: "PARCEL_PICKUP",
+    next: {
+      1: "PARCEL_PICKUP",
+      2: "PARCEL_PICKUP",
+      3: "PARCEL_PICKUP",
+    },
   },
 
   PARCEL_PICKUP: {
@@ -200,7 +216,11 @@ module.exports = {
       2: "Market Square",
       3: "Everyday Supermarket",
     },
-    next: "GROCERY_ITEMS",
+    next: {
+      1: "GROCERY_ITEMS",
+      2: "GROCERY_ITEMS",
+      3: "GROCERY_ITEMS",
+    },
   },
 
   GROCERY_ITEMS: {
