@@ -27,7 +27,11 @@ module.exports = {
     numbered: true,
     storeKey: "ride_platform",
     valueMap: { 1: "Uber", 2: "Bolt", 3: "inDrive" },
-    next: "RIDE_PICKUP",
+    next: {
+      1: "RIDE_PICKUP",
+      2: "RIDE_PICKUP",
+      3: "RIDE_PICKUP",
+    },
   },
 
   RIDE_PICKUP: {
@@ -93,7 +97,12 @@ module.exports = {
       3: "Bolt Food",
       4: "Jumia Food",
     },
-    next: "FOOD_RESTAURANT",
+    next: {
+      1: "FOOD_RESTAURANT",
+      2: "FOOD_RESTAURANT",
+      3: "FOOD_RESTAURANT",
+      4: "FOOD_RESTAURANT",
+    },
   },
 
   FOOD_RESTAURANT: {
@@ -226,7 +235,12 @@ module.exports = {
       3: "Everyday Supermarket",
       4: "Hypercity",
     },
-    next: "GROCERY_ITEMS",
+    next: {
+      1: "GROCERY_ITEMS",
+      2: "GROCERY_ITEMS",
+      3: "GROCERY_ITEMS",
+      4: "GROCERY_ITEMS",
+    },
   },
 
   GROCERY_ITEMS: {
