@@ -252,7 +252,15 @@ module.exports = {
     text: "📝 What items do you need?",
     inputType: "text",
     storeKey: "grocery_items",
-    next: "DELIVERY_ADDRESS",
+    next: "GROCERY_DELIVERY_ADDRESS", // <- separate node
+  },
+
+  GROCERY_DELIVERY_ADDRESS: {
+    id: "GROCERY_DELIVERY_ADDRESS",
+    text: "📍 Where should we deliver your grocery order?",
+    inputType: "text",
+    storeKey: "grocery_delivery_address", // <- separate storeKey
+    next: "GROCERY_CONFIRM",
   },
 
   GROCERY_CONFIRM: {
@@ -261,13 +269,13 @@ module.exports = {
       `🛒 Grocery Summary\n` +
       `Store: ${a.grocery_store}\n` +
       `Items: ${a.grocery_items}\n` +
-      `Address: ${a.delivery_address}\n\n` +
+      `Address: ${a.grocery_delivery_address}\n\n` +
       `1. Confirm\n2. Edit items\n3. Edit address\n4. Cancel`,
     numbered: true,
     next: {
       1: "GROCERY_CONFIRMED",
       2: "GROCERY_ITEMS",
-      3: "DELIVERY_ADDRESS",
+      3: "GROCERY_DELIVERY_ADDRESS", // <- updated
       4: "WELCOME",
     },
   },
