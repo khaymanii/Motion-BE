@@ -275,7 +275,7 @@ module.exports = {
     next: {
       1: "GROCERY_CONFIRMED",
       2: "GROCERY_ITEMS",
-      3: "GROCERY_DELIVERY_ADDRESS", // <- updated
+      3: "GROCERY_DELIVERY_ADDRESS",
       4: "WELCOME",
     },
   },
