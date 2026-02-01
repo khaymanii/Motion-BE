@@ -259,7 +259,7 @@ module.exports = {
     id: "GROCERY_DELIVERY_ADDRESS",
     text: "📍 Where should we deliver your grocery order?",
     inputType: "text",
-    storeKey: "grocery_delivery_address", // <- separate storeKey
+    storeKey: "grocery_delivery_address",
     next: "GROCERY_CONFIRM",
   },
 
