@@ -84,7 +84,7 @@ module.exports = {
 
   FOOD_PLATFORM: {
     id: "FOOD_PLATFORM",
-    text: "🍔 Choose a delivery service:\n\n1. Glovo\n2. Chowdeck",
+    text: "🍔 Choose a delivery service:\n\n1. Glovo\n2. Chowdeck\n3. Bolt Food\n4. Jumia Food",
     numbered: true,
     storeKey: "food_platform",
     valueMap: {
