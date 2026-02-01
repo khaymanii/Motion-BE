@@ -252,7 +252,7 @@ module.exports = {
     text: "📝 What items do you need?",
     inputType: "text",
     storeKey: "grocery_items",
-    next: "GROCERY_DELIVERY_ADDRESS", // <- separate node
+    next: "GROCERY_DELIVERY_ADDRESS",
   },
 
   GROCERY_DELIVERY_ADDRESS: {
