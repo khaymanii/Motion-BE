@@ -19,32 +19,20 @@ module.exports = {
     },
   },
 
-  /* -------------------- RIDE -------------------- */
+  /* ==================== RIDE ==================== */
 
   RIDE_PLATFORM: {
     id: "RIDE_PLATFORM",
-    text:
-      "🚗 Choose a ride service:\n\n" +
-      "1. Uber\n" +
-      "2. Bolt\n" +
-      "3. inDrive",
+    text: "🚗 Choose a ride service:\n\n" + "1. Uber\n2. Bolt\n3. inDrive",
     numbered: true,
     storeKey: "ride_platform",
-    valueMap: {
-      1: "Uber",
-      2: "Bolt",
-      3: "inDrive",
-    },
-    next: {
-      1: "RIDE_PICKUP",
-      2: "RIDE_PICKUP",
-      3: "RIDE_PICKUP",
-    },
+    valueMap: { 1: "Uber", 2: "Bolt", 3: "inDrive" },
+    next: "RIDE_PICKUP",
   },
 
   RIDE_PICKUP: {
     id: "RIDE_PICKUP",
-    text: "Where are you being picked up from?",
+    text: "📍 Where are you being picked up from?",
     inputType: "text",
     storeKey: "pickup_location",
     next: "RIDE_DESTINATION",
@@ -52,10 +40,19 @@ module.exports = {
 
   RIDE_DESTINATION: {
     id: "RIDE_DESTINATION",
-    text: "Where are you going to?",
+    text: "📍 Where are you going to?",
     inputType: "text",
     storeKey: "dropoff_location",
-    next: "RIDE_CONFIRM",
+    next: "RIDE_ESTIMATE",
+  },
+
+  RIDE_ESTIMATE: {
+    id: "RIDE_ESTIMATE",
+    text: (a) =>
+      `💰 Estimated fare on ${a.ride_platform}: ₦2,500 – ₦3,200\n\n` +
+      `1. Continue\n2. Cancel`,
+    numbered: true,
+    next: { 1: "RIDE_CONFIRM", 2: "WELCOME" },
   },
 
   RIDE_CONFIRM: {
@@ -65,55 +62,54 @@ module.exports = {
       `Service: ${a.ride_platform}\n` +
       `From: ${a.pickup_location}\n` +
       `To: ${a.dropoff_location}\n\n` +
-      `1. Confirm\n2. Cancel`,
+      `1. Confirm\n2. Edit pickup\n3. Edit destination\n4. Cancel`,
     numbered: true,
-    next: { 1: "RIDE_CONFIRMED", 2: "WELCOME" },
+    next: {
+      1: "RIDE_CONFIRMED",
+      2: "RIDE_PICKUP",
+      3: "RIDE_DESTINATION",
+      4: "WELCOME",
+    },
   },
 
   RIDE_CONFIRMED: {
     id: "RIDE_CONFIRMED",
     text:
-      "✅ Ride request sent!\n" +
+      "✅ Ride request received!\n" +
       "A driver will contact you shortly.\n\n" +
       "Type *menu* to start again.",
   },
 
-  /* -------------------- FOOD -------------------- */
+  /* ==================== FOOD ==================== */
 
   FOOD_PLATFORM: {
     id: "FOOD_PLATFORM",
-    text: "🍔 Choose a delivery service:\n\n" + "1. Glovo\n" + "2. Chowdeck",
+    text: "🍔 Choose a delivery service:\n\n1. Glovo\n2. Chowdeck",
     numbered: true,
     storeKey: "food_platform",
     valueMap: {
       1: "Glovo",
       2: "Chowdeck",
+      3: "Bolt Food",
+      4: "Jumia Food",
     },
-    next: {
-      1: "FOOD_RESTAURANT",
-      2: "FOOD_RESTAURANT",
-    },
+    next: "FOOD_RESTAURANT",
   },
 
   FOOD_RESTAURANT: {
     id: "FOOD_RESTAURANT",
     text:
-      "Select a restaurant:\n\n" +
-      "1. Chicken Republic\n" +
-      "2. The Place\n" +
-      "3. Genesis",
+      "🍽️ Select a restaurant:\n\n" +
+      "1. Chicken Republic\n2. The Place\n3. Genesis\n4. The Promise",
     numbered: true,
     storeKey: "restaurant",
     valueMap: {
       1: "Chicken Republic",
       2: "The Place",
       3: "Genesis",
+      4: "The Promise",
     },
-    next: {
-      1: "FOOD_ITEM",
-      2: "FOOD_ITEM",
-      3: "FOOD_ITEM",
-    },
+    next: "FOOD_ITEM",
   },
 
   FOOD_ITEM: {
@@ -121,6 +117,14 @@ module.exports = {
     text: "What would you like to order?",
     inputType: "text",
     storeKey: "food_item",
+    next: "DELIVERY_ADDRESS",
+  },
+
+  DELIVERY_ADDRESS: {
+    id: "DELIVERY_ADDRESS",
+    text: "📍 Where should we deliver your order?",
+    inputType: "text",
+    storeKey: "delivery_address",
     next: "FOOD_CONFIRM",
   },
 
@@ -130,10 +134,16 @@ module.exports = {
       `🍔 Order Summary\n` +
       `Service: ${a.food_platform}\n` +
       `Restaurant: ${a.restaurant}\n` +
-      `Item: ${a.food_item}\n\n` +
-      `1. Confirm\n2. Cancel`,
+      `Item: ${a.food_item}\n` +
+      `Address: ${a.delivery_address}\n\n` +
+      `1. Confirm\n2. Edit item\n3. Edit address\n4. Cancel`,
     numbered: true,
-    next: { 1: "FOOD_CONFIRMED", 2: "WELCOME" },
+    next: {
+      1: "FOOD_CONFIRMED",
+      2: "FOOD_ITEM",
+      3: "DELIVERY_ADDRESS",
+      4: "WELCOME",
+    },
   },
 
   FOOD_CONFIRMED: {
@@ -144,29 +154,20 @@ module.exports = {
       "Type *menu* to start again.",
   },
 
-  /* -------------------- PARCEL -------------------- */
+  /* ==================== PARCEL ==================== */
 
   PARCEL_PLATFORM: {
     id: "PARCEL_PLATFORM",
-    text:
-      "📦 Choose a courier service:\n\n" + "1. DHL\n" + "2. FedEx\n" + "3. UPS",
+    text: "📦 Choose a courier service:\n\n1. DHL\n2. FedEx\n3. UPS",
     numbered: true,
     storeKey: "parcel_service",
-    valueMap: {
-      1: "DHL",
-      2: "FedEx",
-      3: "UPS",
-    },
-    next: {
-      1: "PARCEL_PICKUP",
-      2: "PARCEL_PICKUP",
-      3: "PARCEL_PICKUP",
-    },
+    valueMap: { 1: "DHL", 2: "FedEx", 3: "UPS" },
+    next: "PARCEL_PICKUP",
   },
 
   PARCEL_PICKUP: {
     id: "PARCEL_PICKUP",
-    text: "Enter pickup location:",
+    text: "📍 Enter pickup location:",
     inputType: "text",
     storeKey: "parcel_pickup",
     next: "PARCEL_DROP",
@@ -174,7 +175,7 @@ module.exports = {
 
   PARCEL_DROP: {
     id: "PARCEL_DROP",
-    text: "Enter delivery location:",
+    text: "📍 Enter delivery location:",
     inputType: "text",
     storeKey: "parcel_dropoff",
     next: "PARCEL_CONFIRM",
@@ -187,48 +188,48 @@ module.exports = {
       `Courier: ${a.parcel_service}\n` +
       `From: ${a.parcel_pickup}\n` +
       `To: ${a.parcel_dropoff}\n\n` +
-      `1. Confirm\n2. Cancel`,
+      `1. Confirm\n2. Edit pickup\n3. Edit destination\n4. Cancel`,
     numbered: true,
-    next: { 1: "PARCEL_CONFIRMED", 2: "WELCOME" },
+    next: {
+      1: "PARCEL_CONFIRMED",
+      2: "PARCEL_PICKUP",
+      3: "PARCEL_DROP",
+      4: "WELCOME",
+    },
   },
 
   PARCEL_CONFIRMED: {
     id: "PARCEL_CONFIRMED",
     text:
       "✅ Parcel scheduled successfully!\n" +
-      "Courier will contact you shortly.\n\n" +
+      "A courier will contact you shortly.\n\n" +
       "Type *menu* to start again.",
   },
 
-  /* -------------------- GROCERY -------------------- */
+  /* ==================== GROCERY ==================== */
 
   GROCERY_STORE: {
     id: "GROCERY_STORE",
     text:
       "🛒 Choose a supermarket:\n\n" +
-      "1. Walmart\n" +
-      "2. Market Square\n" +
-      "3. Everyday Supermarket",
+      "1. Walmart\n2. Market Square\n3. Everyday Supermarket\n4. Hypercity",
     numbered: true,
     storeKey: "grocery_store",
     valueMap: {
       1: "Walmart",
       2: "Market Square",
       3: "Everyday Supermarket",
+      4: "Hypercity",
     },
-    next: {
-      1: "GROCERY_ITEMS",
-      2: "GROCERY_ITEMS",
-      3: "GROCERY_ITEMS",
-    },
+    next: "GROCERY_ITEMS",
   },
 
   GROCERY_ITEMS: {
     id: "GROCERY_ITEMS",
-    text: "What items do you need?",
+    text: "📝 What items do you need?",
     inputType: "text",
     storeKey: "grocery_items",
-    next: "GROCERY_CONFIRM",
+    next: "DELIVERY_ADDRESS",
   },
 
   GROCERY_CONFIRM: {
@@ -236,10 +237,16 @@ module.exports = {
     text: (a) =>
       `🛒 Grocery Summary\n` +
       `Store: ${a.grocery_store}\n` +
-      `Items: ${a.grocery_items}\n\n` +
-      `1. Confirm\n2. Cancel`,
+      `Items: ${a.grocery_items}\n` +
+      `Address: ${a.delivery_address}\n\n` +
+      `1. Confirm\n2. Edit items\n3. Edit address\n4. Cancel`,
     numbered: true,
-    next: { 1: "GROCERY_CONFIRMED", 2: "WELCOME" },
+    next: {
+      1: "GROCERY_CONFIRMED",
+      2: "GROCERY_ITEMS",
+      3: "DELIVERY_ADDRESS",
+      4: "WELCOME",
+    },
   },
 
   GROCERY_CONFIRMED: {
