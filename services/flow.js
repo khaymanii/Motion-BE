@@ -10,6 +10,7 @@ module.exports = {
       "3. 📦 Parcel delivery\n" +
       "4. 🛒 Grocery shopping",
     numbered: true,
+    allowFreeText: true,
     next: {
       1: "RIDE_PLATFORM",
       2: "FOOD_PLATFORM",
