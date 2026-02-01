@@ -81,7 +81,7 @@ module.exports = {
     text:
       "✅ Ride request received!\n" +
       "A driver will contact you shortly.\n\n" +
-      "Type *menu* to start again.",
+      "Type ´menu´ to start again.",
   },
 
   /* ==================== FOOD ==================== */
@@ -165,7 +165,7 @@ module.exports = {
     text:
       "✅ Order placed successfully!\n" +
       "Your food is on the way.\n\n" +
-      "Type *menu* to start again.",
+      "Type ´menu´ to start again.",
   },
 
   /* ==================== PARCEL ==================== */
@@ -176,7 +176,11 @@ module.exports = {
     numbered: true,
     storeKey: "parcel_service",
     valueMap: { 1: "DHL", 2: "FedEx", 3: "UPS" },
-    next: "PARCEL_PICKUP",
+    next: {
+      1: "PARCEL_PICKUP",
+      2: "PARCEL_PICKUP",
+      3: "PARCEL_PICKUP",
+    },
   },
 
   PARCEL_PICKUP: {
@@ -217,7 +221,7 @@ module.exports = {
     text:
       "✅ Parcel scheduled successfully!\n" +
       "A courier will contact you shortly.\n\n" +
-      "Type *menu* to start again.",
+      "Type ´menu´ to start again.",
   },
 
   /* ==================== GROCERY ==================== */
@@ -273,6 +277,6 @@ module.exports = {
     text:
       "✅ Grocery order placed!\n" +
       "Your items will be delivered soon.\n\n" +
-      "Type *menu* to start again.",
+      "Type ´menu´ to start again.",
   },
 };
